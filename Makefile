@@ -9,7 +9,7 @@ NAME = philo
 
 #Compiler flags
 CC = @gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -pthread
 
 RM = @rm -rf
 
@@ -32,15 +32,13 @@ OBJ=$(SRC:%.c=%.o)
 
 all: $(NAME)
 $(NAME): $(OBJ)
-ifeq ($(UNAME_P),x86_64)
-	$(CC) $(CFLAGS) $(SRC) $(AMD) -o $(NAME)
-else
-	$(CC) $(CFLAGS) $(SRC) $(ARM) -o $(NAME)
-endif
+	@make -C lib/ft_printf/
+	@make -C lib/libft/
+	$(CC) $(CFLAGS) $(SRC) lib/ft_printf/libftprintf.a lib/libft/libft.a -o $(NAME)
 	@echo "$(COLOUR_GREEN)Compiled$(COLOUR_END)"
 
 sanitize:
-	$(CC) $(SRC) lib/libftprintf.a -fsanitize=address -g -o $(NAME)
+	$(CC) $(SRC) lib/libftprintf.a lib/libft.a -fsanitize=address -g -o $(NAME)
 	@echo "$(COLOUR_GREEN)Make Sanitize Done$(COLOUR_END)"
 
 clean:

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/04/04 18:40:33 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/03 13:55:15 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
-# include "libft.h"
-# include "ft_printf.h"
+# include "../lib/libft/libft.h"
+# include "../lib/ft_printf/ft_printf.h"
 
 // -------------------------------- MACROS ---------------------------------- //
 
@@ -34,6 +34,19 @@ typedef struct s_args
 	unsigned int	t_to_sleep;
 	int				n_must_eat;
 }t_args;
+
+typedef struct s_philo
+{
+	int				ph_id;
+	pthread_t		ph_thread;
+}t_philo;
+
+typedef struct s_teste
+{
+	pthread_mutex_t	mutex;
+	long long int	i;
+}t_teste;
+
 
 // -----------------------------  FUNCTIONS --------------------------------- //
 
