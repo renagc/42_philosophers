@@ -1,37 +1,30 @@
 NAME = libft.a
 
-CC = cc
+CC = @cc
 
 CFLAGS = -Wall -Wextra -Werror
 
-RM = rm -f
+RM = @rm -f
 
-SOURCES =	ft_bzero.c ft_isascii.c ft_memchr.c ft_strdup.c \
-		ft_strrchr.c ft_strlen.c ft_isalnum.c ft_isdigit.c \
-		ft_memcmp.c ft_memset.c ft_strncmp.c ft_tolower.c ft_memmove.c\
-		ft_atoi.c ft_isalpha.c ft_isprint.c ft_memcpy.c ft_strchr.c \
-		ft_strlcpy.c ft_strnstr.c ft_strlcat.c ft_calloc.c ft_toupper.c \
-		ft_substr.c ft_strjoin.c ft_strtrim.c ft_split.c ft_itoa.c \
-		ft_putchar_fd.c ft_putnbr_fd.c ft_putendl_fd.c ft_strmapi.c \
-		ft_putstr_fd.c ft_striteri.c
+SRC = src/conv/ft_atoi.c         src/is/ft_isdigit.c        src/lst/ft_lstmap.c        src/mem/ft_memmove.c       src/str/ft_split.c         src/str/ft_strncmp.c \
+src/conv/ft_itoa.c         src/is/ft_isprint.c        src/lst/ft_lstnew.c        src/mem/ft_memset.c        src/str/ft_strchr.c        src/str/ft_strnstr.c \
+src/conv/ft_strmapi.c      src/lst/ft_lstadd_back.c   src/lst/ft_lstsize.c       src/others/ft_printf.c     src/str/ft_strdup.c        src/str/ft_strrchr.c \
+src/conv/ft_tolower.c      src/lst/ft_lstadd_front.c  src/mem/ft_bzero.c         src/others/get_next_line.c src/str/ft_striteri.c      src/str/ft_strtrim.c \
+src/conv/ft_toupper.c      src/lst/ft_lstclear.c      src/mem/ft_calloc.c        src/put/ft_putchar_fd.c    src/str/ft_strjoin.c       src/str/ft_substr.c \
+src/is/ft_isalnum.c        src/lst/ft_lstdelone.c     src/mem/ft_memchr.c        src/put/ft_putendl_fd.c    src/str/ft_strlcat.c \
+src/is/ft_isalpha.c        src/lst/ft_lstiter.c       src/mem/ft_memcmp.c        src/put/ft_putnbr_fd.c     src/str/ft_strlcpy.c \
+src/is/ft_isascii.c        src/lst/ft_lstlast.c       src/mem/ft_memcpy.c        src/put/ft_putstr_fd.c     src/str/ft_strlen.c
 
-OBJECTS = $(SOURCES:.c=.o)
-
-BONUS_SOURCES = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c ft_lstadd_back.c \
-		ft_lstdelone.c ft_lstclear.c ft_lstiter.c ft_lstmap.c
-
-BONUS_OBJECTS =	$(BONUS_SOURCES:.c=.o)
+OBJ = $(SRC:.c=.o)
 
 all:	$(NAME)
 
-$(NAME):	$(OBJECTS)
-			ar rcs $(NAME) $(OBJECTS)
-
-bonus:	$(BONUS_OBJECTS)
-			ar rcs $(NAME) $(BONUS_OBJECTS)
+$(NAME):	$(OBJ)
+			@ar rcs $(NAME) $(OBJ)
+			@echo "\nlib compiled\n"
 
 clean:
-			$(RM) $(OBJECTS) $(BONUS_OBJECTS)
+			$(RM) $(OBJ)
 
 fclean:	clean
 			$(RM) $(NAME)

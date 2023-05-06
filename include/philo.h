@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/03 13:55:15 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/07 00:19:05 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
-# include "../lib/libft/libft.h"
-# include "../lib/ft_printf/ft_printf.h"
+# include "../lib/libft/include/libft.h"
 
 // -------------------------------- MACROS ---------------------------------- //
 
