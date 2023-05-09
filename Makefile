@@ -21,7 +21,7 @@ UNAME_P=$(shell uname -p)
 FIND_OBJ_FOLDER=$(shell find src/ -type d -name "obj")
 
 #Source files
-SRC=src/main.c
+SRC=src/main.c src/utils.c
 OBJ=$(SRC:%.c=%.o)
 
 #Phony targets
@@ -50,6 +50,8 @@ fclean: clean
 	$(RM) $(NAME)
 	@echo "$(COLOUR_GREEN)$(NAME) removed$(COLOUR_END)"
 
-run:
-	make sanita && ./$(NAME) infile "grep ola" "wc -l" outfile
-make re: fclean all
+run: re
+	@echo "\nExecuting Program:\n"
+	./$(NAME) 200 200 200 10
+
+re: fclean all

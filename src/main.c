@@ -6,13 +6,14 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 11:45:55 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/07 00:28:43 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/07 10:58:31 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-static int	ft_is_digit_array(char **av)
+//check if the all chars in array are digit -- done
+static int	is_digit_array(char **av)
 {
 	int		i;
 	int		j;
@@ -28,9 +29,10 @@ static int	ft_is_digit_array(char **av)
 	return (1);
 }
 
-static int	ft_init_args(t_args *args, char **av)
+//init all args of the program -- done
+static int	init_args(t_args *args, char **av)
 {
-	if (!ft_is_digit_array(av))
+	if (!is_digit_array(av))
 		return (0);
 	args->n_of_ph = ft_atoi(av[1]);
 	if (args->n_of_ph < 1)
@@ -45,42 +47,55 @@ static int	ft_init_args(t_args *args, char **av)
 	return (1);
 }
 
-void	*othername(void *teste)
+t_philo	*philonew(t_args *args)
 {
-	t_teste			*try;
-	int				a;
+	t_philo	*newphilo;
 
-	a = -1;
-	try = (struct s_teste *)teste;
-	pthread_mutex_lock(&try->mutex);
-	while (++a < 10000)
-	{
-		try->i += 1;
-	}
-	pthread_mutex_unlock(&try->mutex);
-	return (NULL);
+	newphilo = malloc(sizeof(t_philo));
+	if (!newphilo)
+		return (0);
 }
 
-//list of philosophers
-t_list	*init_philos(t_args *args)
+t_list	*ft_lstnew(void *content)
 {
-	t_list	*temp;
-	t_list	*ph_list;
-	t_philo	*ph;
+	t_list	*newlist;
+
+	newlist = malloc(sizeof(t_list));
+	if (!newlist)
+		return (0);
+	newlist->content = content;
+	newlist->next = NULL;
+	return (newlist);
+}
+
+void	ft_lstadd_back(t_list **lst, t_list *new)
+{
+	t_list	*lastlist;
+
+	if (!(*lst))
+		*lst = new;
+	else
+	{
+		lastlist = ft_lstlast(*lst);
+		lastlist -> next = new;
+	}
+}
+
+t_philo	init_philos(t_args *args)
+{
+	t_philo	*philo;
+	t_philo	*list;
 	int		i;
 
-	ph = 0;
-	temp = ft_lstnew((t_philo *)ph);
-	ph_list = temp;
-	i = 0;
-	while (i < args->n_of_ph)
+	i = 1;
+	while (i <= args->n_of_ph)
 	{
-		ph = (t_philo *)temp->content;
-		ph->ph_id = i;
-		ft_lstadd_back(&temp, ft_lstnew(ph));
-		temp = temp->next;
+		philo = malloc(sizeof(t_philo));
+		if (!philo)
+		if (pthread_create(philo.thread, NULL, othername, &teste))
+			return (ft_printf("Error: pthread\n"));
+		pthread_mutex_init(&philo.mutex, NULL);
 	}
-	return (ph_list);
 }
 
 int	main(int ac, char **av)
@@ -88,11 +103,9 @@ int	main(int ac, char **av)
 	t_args			args;
 	pthread_t		t1;
 	pthread_t		t2;
-	t_teste			teste;
 
-	teste.i = 0;
 	pthread_mutex_init(&teste.mutex, NULL);
-	if (ac < 5 || ac > 6 || !ft_init_args(&args, av))
+	if (ac < 5 || ac > 6 || !init_args(&args, av))
 		return (ft_printf("Error: check args\n"));
 	if (pthread_create(&t1, NULL, othername, &teste))
 		return (ft_printf("Error: pthread\n"));
