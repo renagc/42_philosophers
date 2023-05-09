@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 11:45:55 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/07 10:58:31 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/09 16:05:34 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,73 +47,14 @@ static int	init_args(t_args *args, char **av)
 	return (1);
 }
 
-t_philo	*philonew(t_args *args)
-{
-	t_philo	*newphilo;
-
-	newphilo = malloc(sizeof(t_philo));
-	if (!newphilo)
-		return (0);
-}
-
-t_list	*ft_lstnew(void *content)
-{
-	t_list	*newlist;
-
-	newlist = malloc(sizeof(t_list));
-	if (!newlist)
-		return (0);
-	newlist->content = content;
-	newlist->next = NULL;
-	return (newlist);
-}
-
-void	ft_lstadd_back(t_list **lst, t_list *new)
-{
-	t_list	*lastlist;
-
-	if (!(*lst))
-		*lst = new;
-	else
-	{
-		lastlist = ft_lstlast(*lst);
-		lastlist -> next = new;
-	}
-}
-
-t_philo	init_philos(t_args *args)
-{
-	t_philo	*philo;
-	t_philo	*list;
-	int		i;
-
-	i = 1;
-	while (i <= args->n_of_ph)
-	{
-		philo = malloc(sizeof(t_philo));
-		if (!philo)
-		if (pthread_create(philo.thread, NULL, othername, &teste))
-			return (ft_printf("Error: pthread\n"));
-		pthread_mutex_init(&philo.mutex, NULL);
-	}
-}
-
 int	main(int ac, char **av)
 {
-	t_args			args;
-	pthread_t		t1;
-	pthread_t		t2;
+	t_args	args;
+	t_philo	*philos;
 
-	pthread_mutex_init(&teste.mutex, NULL);
 	if (ac < 5 || ac > 6 || !init_args(&args, av))
 		return (ft_printf("Error: check args\n"));
-	if (pthread_create(&t1, NULL, othername, &teste))
-		return (ft_printf("Error: pthread\n"));
-	if (pthread_create(&t2, NULL, othername, &teste))
-		return (ft_printf("Error: pthread\n"));
-	pthread_join(t1, NULL);
-	pthread_join(t2, NULL);
-	pthread_mutex_destroy(&teste.mutex);
-	ft_printf("%d\n", teste.i);
+	philos = init_philos(&args);
+	join_threads(philos);
 	return (0);
 }

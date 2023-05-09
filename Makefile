@@ -17,11 +17,10 @@ RM = @rm -rf
 LIBFT_A=lib/libft/libft.a
 
 #ShellCommands
-UNAME_P=$(shell uname -p)
 FIND_OBJ_FOLDER=$(shell find src/ -type d -name "obj")
 
 #Source files
-SRC=src/main.c src/utils.c
+SRC=src/main.c src/lst_philos.c
 OBJ=$(SRC:%.c=%.o)
 
 #Phony targets
@@ -36,6 +35,7 @@ $(NAME): $(OBJ)
 sanitize:
 	$(CC) $(SRC) $(LIBFT_A) -fsanitize=address -g -o $(NAME)
 	@echo "$(COLOUR_GREEN)Make Sanitize Done$(COLOUR_END)"
+	make run
 
 valgrind: all
 	valgrind  ./$(NAME)
@@ -50,7 +50,7 @@ fclean: clean
 	$(RM) $(NAME)
 	@echo "$(COLOUR_GREEN)$(NAME) removed$(COLOUR_END)"
 
-run: re
+run: all
 	@echo "\nExecuting Program:\n"
 	./$(NAME) 200 200 200 10
 

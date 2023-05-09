@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/07 10:51:02 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/09 11:08:52 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,8 @@ typedef struct s_philo
 
 
 // -----------------------------  FUNCTIONS --------------------------------- //
+
+t_philo	*init_philos(t_args *args);
+void	join_threads(t_philo *philos);
 
 #endif
