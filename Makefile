@@ -52,6 +52,6 @@ fclean: clean
 
 run: all
 	@echo "\nExecuting Program:\n"
-	./$(NAME) 200 200 200 10
+	./$(NAME) 5 200 200 10
 
 re: fclean all
