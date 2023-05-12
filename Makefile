@@ -20,7 +20,7 @@ LIBFT_A=lib/libft/libft.a
 FIND_OBJ_FOLDER=$(shell find src/ -type d -name "obj")
 
 #Source files
-SRC=src/main.c src/lst_philos.c
+SRC=src/main.c src/lst_philos.c src/debug.c
 OBJ=$(SRC:%.c=%.o)
 
 #Phony targets
@@ -38,7 +38,7 @@ sanitize:
 	make run
 
 valgrind: all
-	valgrind  ./$(NAME)
+	valgrind ./$(NAME) 10 200 200 10
 
 clean:
 	@make clean -C lib/libft/

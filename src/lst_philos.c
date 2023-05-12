@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lst_philos.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 10:40:30 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/09 16:30:00 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/12 15:36:14 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-//get the last list
+//get last philo
 static t_philo	*last_philo(t_philo *lst)
 {
 	t_philo	*temp;
@@ -25,7 +25,7 @@ static t_philo	*last_philo(t_philo *lst)
 	return (temp);
 }
 
-//adds lst to back
+//push back first philo
 static void	add_back_philo(t_philo **lst, t_philo *new)
 {
 	t_philo	*lastlist;
@@ -39,12 +39,12 @@ static void	add_back_philo(t_philo **lst, t_philo *new)
 	}
 }
 
-//new_philo
+//creates new_philo
 static t_philo	*new_philo(t_args *args, int id)
 {
 	t_philo	*newphilo;
 
-	newphilo = malloc(sizeof(t_list));
+	newphilo = malloc(sizeof(t_philo));
 	if (!newphilo)
 		return (0);
 	newphilo->n_must_eat = args->n_must_eat;
@@ -56,33 +56,18 @@ static t_philo	*new_philo(t_args *args, int id)
 	return (newphilo);
 }
 
-void	*test(void *s)
+void	*routine(void *route)
 {
-	ft_printf("%s\n", (char *)s);
-	return (NULL);
-}
+	int		i;
+	t_philo	*philo;
 
-void	destroy_mutexs(t_philo *philos)
-{
-	t_philo	*temp;
-
-	temp = philos;
-	while (temp)
+	i = 0;
+	philo = (t_philo *)route;
+	while (are_all_alive(philo))
 	{
-		pthread_mutex_destroy(&temp->mutex);
-		temp = temp->next;
-	}
-}
-
-void	join_threads(t_philo *philos)
-{
-	t_philo	*temp;
-
-	temp = philos;
-	while (temp)
-	{
-		pthread_join(temp->thread, NULL);
-		temp = temp->next;
+		eat(philo);
+		think(philo);
+		sleep(philo);
 	}
 }
 
@@ -92,15 +77,12 @@ t_philo	*init_philos(t_args *args)
 	t_philo	*lst;
 	int		i;
 
-	i = 1;
+	i = 0;
 	lst = 0;
-	while (i <= args->n_of_ph)
-	{
-		//if (pthread_create(&temp->thread, NULL, test, "ola"))
-		//	return (0);
-		//pthread_mutex_init(&temp->mutex, NULL);
+	while (++i <= args->n_of_ph)
 		add_back_philo(&lst, new_philo(args, i));
-		i++;
-	}
+	init_mutex(lst);
+	init_thread(lst);
+	join_thread(lst);
 	return (lst);
 }

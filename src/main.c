@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 11:45:55 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/09 16:22:30 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/12 14:38:58 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,17 @@ static int	init_args(t_args *args, char **av)
 	return (1);
 }
 
-static void	ft_printlst(t_philo *philos)
+//free all philos
+static void	free_lst(t_philo *lst)
 {
 	t_philo	*temp;
 
-	temp = philos;
-	while (temp)
+	temp = lst;
+	while (lst)
 	{
-		ft_printf("%d", temp->ph_id);
-		temp = temp->next;
+		lst = lst->next;
+		free(temp);
+		temp = lst;
 	}
 }
 
@@ -67,7 +69,6 @@ int	main(int ac, char **av)
 	if (ac < 5 || ac > 6 || !init_args(&args, av))
 		return (ft_printf("Error: check args\n"));
 	philos = init_philos(&args);
-	join_threads(philos);
-	ft_printlst(philos);
+	free_lst(philos);
 	return (0);
 }
