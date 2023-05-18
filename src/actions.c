@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:25:57 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/12 15:34:43 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/16 16:38:12 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,20 @@ int	are_all_alive(t_philo *philos)
 	return (1);
 }
 
-void	eat(t_philo *philo)
+void	f_eat(t_philo *philo)
 {
+	(void)philo;
 	return ;
 }
 
-void	think(t_philo *philo)
+void	f_think(t_philo *philo)
 {
+	(void)philo;
 	return ;
 }
 
-void	sleep(t_philo *philo)
+void	f_sleep(t_philo *philo)
 {
+	(void)philo;
 	return ;
 }

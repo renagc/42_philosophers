@@ -20,7 +20,7 @@ LIBFT_A=lib/libft/libft.a
 FIND_OBJ_FOLDER=$(shell find src/ -type d -name "obj")
 
 #Source files
-SRC=src/main.c src/lst_philos.c src/debug.c
+SRC=src/main.c src/lst_philos.c src/debug.c src/thread.c src/utils.c src/actions.c
 OBJ=$(SRC:%.c=%.o)
 
 #Phony targets
