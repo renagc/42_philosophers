@@ -1,29 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   conditions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/12 15:16:13 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/18 14:57:43 by rgomes-c         ###   ########.fr       */
+/*   Created: 2023/05/18 14:37:13 by rgomes-c          #+#    #+#             */
+/*   Updated: 2023/05/18 16:28:36 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-unsigned long long	get_time(void)
+int	f_all_alive(t_philo *philo)
 {
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return (time.tv_sec * 1000 + time.tv_usec / 1000);
+	(void) philo;
+	return (1);
 }
 
-unsigned long long	get_exec_time(unsigned long long start_time)
+int	check_dead(t_philo *philos)
 {
-	struct timeval	time;
+	t_philo	*temp;
+	unsigned long long	time;
 
-	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000 + time.tv_usec / 1000) - start_time);
+	temp = philos;
+	time = get_time();
+	while (temp)
+	{
+		time = get_time() - temp->table_data->start_time;
+		if (temp->table_data->t_to_die < time && time != 0)
+		{
+			printf("aqui esta o time: %lld\n", time);
+			temp->table_data->dead_flag = 1;
+			return (0);
+		}
+		temp = temp->next;
+	}
+	return (1);
 }

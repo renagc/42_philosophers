@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 11:45:55 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/16 15:56:28 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/18 16:26:19 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,18 @@ static int	init_table(t_table *table, char **av)
 	return (1);
 }
 
-//free all philos
-static void	free_lst(t_philo *lst)
-{
-	t_philo	*temp;
-
-	temp = lst;
-	while (lst)
-	{
-		lst = lst->next;
-		free(temp);
-		temp = lst;
-	}
-}
-
 int	main(int ac, char **av)
 {
-	t_table table;
+	t_table	table;
+	t_philo	*philos;
 
 	if (ac < 5 || ac > 6 || !init_table(&table, av))
 		return (ft_printf("Error: check args\n"));
-	init_philos(&table);
-	free_lst(table.philos);
+	philos = init_philos(&table);
+	init_mutex(philos);
+	init_thread(philos);
+	if (!check_dead(philos))
+		join_thread(philos);
+	destroy_mutex(philos);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_philos.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 10:40:30 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/16 22:06:41 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/18 16:25:54 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void	add_back_philo(t_philo **lst, t_philo *new)
 }
 
 //creates new_philo
-static t_philo	*new_philo(int id)
+static t_philo	*new_philo(int id, t_table *table)
 {
 	t_philo	*newphilo;
 
@@ -48,38 +48,42 @@ static t_philo	*new_philo(int id)
 	if (!newphilo)
 		return (0);
 	newphilo->ph_id = id;
-	newphilo->ate_time = 0;
+	newphilo->last_time_ate = get_time();
+	newphilo->table_data = table;
 	newphilo->next = NULL;
 	return (newphilo);
 }
 
 void	*routine(void *route)
 {
-	t_table	*table;
+	t_philo	*philo;
 
-	table = (t_table *)route;
-	while (are_all_alive(table->philos))
+	philo = (t_philo *)route;
+	while (philo->table_data->dead_flag != 1)
 	{
-		f_eat(table->philos);
-		f_think(table->philos);
-		f_sleep(table->philos);
+		if (philo->ph_id % 2 == 0)
+			usleep(500);
+		f_eat(philo);
+		f_sleep(philo);
+		f_think(philo);
 	}
 	return (NULL);
 }
 
 //creates linked list with all philos
-void	init_philos(t_table *table)
+t_philo	*init_philos(t_table *table)
 {
 	t_philo	*lst;
+	t_philo	*last;
 	int		i;
 
 	i = 0;
 	lst = 0;
 	while (++i <= table->n_of_ph)
-		add_back_philo(&lst, new_philo(i));
-	table->philos = lst;
-	init_mutex(table);
+		add_back_philo(&lst, new_philo(i, table));
+	last = last_philo(lst);
+	last->next = lst;
+	table->ph_head_lst = lst;
 	table->start_time = get_time();
-	init_thread(table);
-	join_thread(table);
+	return (lst);
 }
