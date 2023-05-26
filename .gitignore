@@ -6,3 +6,6 @@
 
 #Sanitize Folder
 *.dSYM/
+
+#Program Name
+philo
