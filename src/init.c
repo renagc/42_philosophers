@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 09:54:58 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/26 10:33:30 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/26 11:50:31 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ void	init_philos(void)
 	while (++i <= table()->n_of_ph)
 		add_back_philo(&lst, new_philo(i));
 	last = last_philo(lst);
-	if (table()->n_of_ph != 1)
-		last->next = lst;
+	last->next = lst;
 	table()->ph_lst = lst;
 }
 

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:25:57 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/26 10:19:07 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/26 11:33:51 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,4 @@ void	f_eat(t_philo *philo)
 		table()->phs_ate += 1;
 		pthread_mutex_unlock(&table()->meal_mutex);
 	}
-}
-
-void	f_think(t_philo *philo)
-{
-	f_write(philo, THINK, get_program_time());
-}
-
-void	f_sleep(t_philo *philo)
-{
-	f_write(philo, SLEEP, get_program_time());
-	f_usleep(table()->t_to_sleep);
 }
