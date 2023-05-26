@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:25:57 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/18 15:31:28 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/05/26 10:19:07 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 void	f_write(t_philo *philo, int action, unsigned long long time)
 {
-	pthread_mutex_lock(&philo->table_data->write_mutex);
+	if (someone_died())
+		return ;
+	pthread_mutex_lock(&table()->write_mutex);
 	if (action == FORK)
 		ft_printf("%d %d has taken a fork\n", time, philo->ph_id);
 	else if (action == EAT)
@@ -25,34 +27,45 @@ void	f_write(t_philo *philo, int action, unsigned long long time)
 		ft_printf("%d %d is thinking\n", time, philo->ph_id);
 	else if (action == DEAD)
 		ft_printf("%d %d died\n", time, philo->ph_id);
-	pthread_mutex_unlock(&philo->table_data->write_mutex);
+	pthread_mutex_unlock(&table()->write_mutex);
 }
 
 void	f_eat(t_philo *philo)
 {
-	unsigned long long	time;
-
+	while (philo->next->fork_in_use == 1)
+		continue ;
 	pthread_mutex_lock(&philo->fork);
-	f_write(philo, FORK, get_time() - philo->table_data->start_time);
+	philo->fork_in_use = 1;
+	f_write(philo, FORK, get_program_time());
 	pthread_mutex_lock(&philo->next->fork);
-	f_write(philo, FORK, get_time() - philo->table_data->start_time);
-	time = get_time();
-	pthread_mutex_lock(&philo->table_data->time_mutex);
-	philo->last_time_ate = time - philo->table_data->start_time;
-	pthread_mutex_unlock(&philo->table_data->time_mutex);
-	f_write(philo, EAT, get_time() - philo->table_data->start_time);
-	usleep(philo->table_data->t_to_eat * 1000);
+	philo->next->fork_in_use = 1;
+	f_write(philo, FORK, get_program_time());
+	f_write(philo, EAT, get_program_time());
+	pthread_mutex_lock(&table()->meal_mutex);
+	table()->all_ate += 1;
+	pthread_mutex_unlock(&table()->meal_mutex);
+	philo->last_meal = get_program_time();
+	f_usleep(table()->t_to_eat);
 	pthread_mutex_unlock(&philo->fork);
+	philo->fork_in_use = 0;
 	pthread_mutex_unlock(&philo->next->fork);
+	philo->next->fork_in_use = 0;
+	philo->n_meals -= 1;
+	if (philo->n_meals == 0)
+	{
+		pthread_mutex_lock(&table()->meal_mutex);
+		table()->phs_ate += 1;
+		pthread_mutex_unlock(&table()->meal_mutex);
+	}
 }
 
 void	f_think(t_philo *philo)
 {
-	f_write(philo, THINK, get_time() - philo->table_data->start_time);
+	f_write(philo, THINK, get_program_time());
 }
 
 void	f_sleep(t_philo *philo)
 {
-	f_write(philo, SLEEP, get_time() - philo->table_data->start_time);
-	usleep(philo->table_data->t_to_sleep * 1000);
+	f_write(philo, SLEEP, get_program_time());
+	f_usleep(table()->t_to_sleep);
 }

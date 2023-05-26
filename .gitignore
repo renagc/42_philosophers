@@ -3,3 +3,6 @@
 
 #Mac files
 .DS_Store
+
+#Sanitize Folder
+*.dSYM/

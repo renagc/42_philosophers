@@ -20,7 +20,7 @@ LIBFT_A=lib/libft/libft.a
 FIND_OBJ_FOLDER=$(shell find src/ -type d -name "obj")
 
 #Source files
-SRC=src/main.c src/lst_philos.c src/debug.c src/thread.c src/utils.c src/actions.c src/conditions.c
+SRC=src/objects.c src/init.c src/main.c src/lst_philos.c src/debug.c src/thread.c src/utils.c src/actions.c src/conditions.c
 OBJ=$(SRC:%.c=%.o)
 
 #Phony targets
@@ -33,7 +33,7 @@ $(NAME): $(OBJ)
 	@echo "$(COLOUR_GREEN)Program Compiled: Success$(COLOUR_END)"
 
 sanitize:
-	$(CC) $(SRC) $(LIBFT_A) -fsanitize=address -pthread -o $(NAME)
+	$(CC) $(SRC) $(LIBFT_A) -fsanitize=address -g -pthread -o $(NAME)
 	@echo "$(COLOUR_GREEN)Make Sanitize Done$(COLOUR_END)"
 	make run
 
@@ -52,6 +52,6 @@ fclean: clean
 
 run: all
 	@echo "\nExecuting Program:\n"
-	./$(NAME) 5 1000 200 200
+	./$(NAME) 6 800 200 200 4
 
 re: fclean all
