@@ -19,7 +19,7 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC=src/object.c src/init.c src/main.c src/lst_philos.c src/debug.c src/thread.c src/utils.c src/actions.c src/conditions.c
+SRC			=	src/actions.c  src/conditions.c  src/debug.c  src/init.c  src/lst_philos.c  src/main.c  src/object.c  src/thread.c  src/utils.c
 
 #Object files
 OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
