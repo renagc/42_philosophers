@@ -43,10 +43,12 @@ $(OBJ_DIR):
 
 clean:
 	@rm -rf $(OBJ_DIR)
+	@make clean --silent -C $(LIBFT_DIR)
 	@echo "$(YELLOW)All Objects removed.$(COLOUR_END)"
 
 fclean: clean
 	@rm -rf $(NAME)
+	@make fclean --silent -C $(LIBFT_DIR)
 	@echo "$(YELLOW)$(NAME) removed.$(COLOUR_END)"
 
 re: fclean all

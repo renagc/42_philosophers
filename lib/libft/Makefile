@@ -21,7 +21,7 @@ all:	$(NAME)
 
 $(NAME):	$(OBJ)
 			@ar rcs $(NAME) $(OBJ)
-			@echo "\nlib compiled\n"
+			@echo "\n$(NAME) created\n"
 
 clean:
 			$(RM) $(OBJ)
