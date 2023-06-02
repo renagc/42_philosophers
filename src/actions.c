@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:25:57 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/26 11:33:51 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/02 15:42:25 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,36 @@ void	f_write(t_philo *philo, int action, unsigned long long time)
 {
 	if (someone_died())
 		return ;
-	pthread_mutex_lock(&table()->write_mutex);
-	if (action == FORK)
+	if (action == FORK && !someone_died())
+	{
+		pthread_mutex_lock(&table()->write_mutex);
 		ft_printf("%d %d has taken a fork\n", time, philo->ph_id);
-	else if (action == EAT)
+		pthread_mutex_unlock(&table()->write_mutex);
+	}
+	else if (action == EAT && !someone_died())
+	{
+		pthread_mutex_lock(&table()->write_mutex);
 		ft_printf("%d %d is eating\n", time, philo->ph_id);
-	else if (action == SLEEP)
+		pthread_mutex_unlock(&table()->write_mutex);
+	}
+	else if (action == SLEEP && !someone_died())
+	{
+		pthread_mutex_lock(&table()->write_mutex);
 		ft_printf("%d %d is sleeping\n", time, philo->ph_id);
-	else if (action == THINK)
+		pthread_mutex_unlock(&table()->write_mutex);
+	}
+	else if (action == THINK && !someone_died())
+	{
+		pthread_mutex_lock(&table()->write_mutex);
 		ft_printf("%d %d is thinking\n", time, philo->ph_id);
+		pthread_mutex_unlock(&table()->write_mutex);
+	}
 	else if (action == DEAD)
+	{
+		pthread_mutex_lock(&table()->write_mutex);
 		ft_printf("%d %d died\n", time, philo->ph_id);
-	pthread_mutex_unlock(&table()->write_mutex);
+		pthread_mutex_unlock(&table()->write_mutex);
+	}
 }
 
 void	f_eat(t_philo *philo)
