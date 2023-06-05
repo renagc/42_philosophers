@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/05 00:35:26 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/05 12:58:33 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@
 # include "../lib/libft/include/libft.h"
 
 // -------------------------------- MACROS ---------------------------------- //
-
-# define FORK 1
-# define EAT 2
-# define SLEEP 3
-# define THINK 4
-# define DEAD 5
 
 // ------------------------------- STRUCTS ---------------------------------- //
 
@@ -104,7 +98,7 @@ int					join_thread(void);
 void				f_eat(t_list *lst);
 void				f_think(t_philo *philo);
 void				f_sleep(t_philo *philo);
-void				f_write(t_philo *philo, int action, unsigned long long time);
+void				f_write(t_philo *philo, char *str, unsigned long long time);
 
 
 int					someone_died(void);
