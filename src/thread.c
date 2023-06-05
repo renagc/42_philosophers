@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:20:03 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/26 11:33:42 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/05 00:36:29 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,40 @@
 
 int	destroy_mutex(void)
 {
-	t_philo	*temp;
+	t_list	*temp;
+	int		i;
 
 	temp = table()->ph_lst;
-	while (temp)
+	i = 0;
+	while (++i <= table()->n_of_ph)
 	{
-		if (pthread_mutex_destroy(&temp->fork))
+		if (pthread_mutex_destroy(&((t_philo *)temp->content)->fork))
 			return (ft_printf("Error initing mutex"));
-		if (temp->ph_id == table()->n_of_ph)
-			break ;
 		temp = temp->next;
 	}
-	pthread_mutex_init(&table()->meal_mutex, NULL);
-	pthread_mutex_init(&table()->dead_mutex, NULL);
-	pthread_mutex_init(&table()->write_mutex, NULL);
-	pthread_mutex_init(&table()->time_mutex, NULL);
+	pthread_mutex_destroy(&table()->meal_mutex);
+	pthread_mutex_destroy(&table()->dead_mutex);
+	pthread_mutex_destroy(&table()->write_mutex);
+	pthread_mutex_destroy(&table()->time_mutex);
+	pthread_mutex_destroy(&table()->fork_check);
 	return (1);
 }
 
 int	join_thread(void)
 {
-	t_philo	*temp;
+	t_list	*temp;
+	int		i;
 
 	temp = table()->ph_lst;
-	while (temp)
+	i = 0;
+	while (++i <= table()->n_of_ph)
 	{
-		pthread_join(temp->thread, NULL);
-		if (temp->ph_id == table()->n_of_ph)
-			break ;
+		if (pthread_join(((t_philo *)temp->content)->thread, NULL))
+			return (0);
 		temp = temp->next;
 	}
-	pthread_join(table()->thread, NULL);
+	if (pthread_join(table()->thread, NULL))
+		return (0);
 	return (1);
 }
 
@@ -73,49 +76,55 @@ int	one_philo(t_philo *philo)
 
 void	*routine(void *route)
 {
-	t_philo	*philo;
+	t_list	*temp;
 
-	philo = (t_philo *)route;
-	if (one_philo(philo))
+	temp = (t_list *)route;
+	if (one_philo((t_philo *)temp->content))
 		return (NULL);
-	if (philo->ph_id % 2 == 0)
-		usleep(200);
 	while (!someone_died())
 	{
-		f_eat(philo);
-		if (philo->n_meals == 0)
+		f_eat(temp);
+		if (((t_philo *)temp->content)->n_meals == 0)
 			break ;
-		f_write(philo, SLEEP, get_program_time());
-		f_usleep(table()->t_to_sleep);
-		f_write(philo, THINK, get_program_time());
+		if (!someone_died())
+			f_write(((t_philo *)temp->content), SLEEP, get_program_time());
+		if (!someone_died())
+			f_usleep(table()->t_to_sleep);
+		if (!someone_died())
+			f_write(((t_philo *)temp->content), THINK, get_program_time());
 	}
 	return (NULL);
 }
 
 void	*routine_control(void *route)
 {
-	t_philo				*lst;
+	t_list				*lst;
+	t_philo				*philo;
 
-	lst = (t_philo *)route;
+	lst = (t_list *)route;
 	if (table()->n_of_ph == 1)
 		return (NULL);
 	while (lst)
 	{
+		philo = (t_philo *)lst->content;
 		pthread_mutex_lock(&table()->meal_mutex);
 		if (table()->phs_ate == table()->n_of_ph)
 		{
 			pthread_mutex_unlock(&table()->meal_mutex);
 			return (NULL);
 		}
-		pthread_mutex_unlock(&table()->meal_mutex);
-		if ((get_program_time() - lst->last_meal) > table()->t_to_die && lst->last_meal)
+		if ((get_program_time() - philo->last_meal) > table()->t_to_die && philo->last_meal)
 		{
 			pthread_mutex_lock(&table()->dead_mutex);
 			table()->ph_dead = 1;
 			pthread_mutex_unlock(&table()->dead_mutex);
-			ft_printf("%d %d died\n", get_program_time(), lst->ph_id);
+			pthread_mutex_lock(&table()->write_mutex);
+			ft_printf("%d %d died\n", get_program_time(), philo->ph_id);
+			pthread_mutex_unlock(&table()->write_mutex);
+			pthread_mutex_unlock(&table()->meal_mutex);
 			return (NULL);
 		}
+		pthread_mutex_unlock(&table()->meal_mutex);
 		lst = lst->next;
 	}
 	return (NULL);

@@ -10,7 +10,7 @@ NAME = philo
 
 #Compiler flags
 CC = @gcc
-CFLAGS = -Wall -Wextra -Werror -pthread -g #-fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -pthread -g -fsanitize=thread
 
 RM = @rm -rf
 
@@ -19,7 +19,7 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC			=	src/actions.c  src/conditions.c  src/debug.c  src/init.c  src/lst_philos.c  src/main.c  src/object.c  src/thread.c  src/utils.c
+SRC			=	src/actions.c  src/conditions.c  src/init.c  src/main.c  src/object.c  src/thread.c  src/utils.c
 
 #Object files
 OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
@@ -52,5 +52,9 @@ fclean: clean
 	@echo "$(YELLOW)$(NAME) removed.$(COLOUR_END)"
 
 re: fclean all
+
+run: re
+	@echo "\nRunning program:\n"
+	@./$(NAME) 5 800 200 200 5
 
 .PHONY: all clean fclean re bonus

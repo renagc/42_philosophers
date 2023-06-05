@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/26 10:14:22 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/05 00:35:26 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ struct s_table
 	pthread_mutex_t		time_mutex;
 	pthread_mutex_t		meal_mutex;
 	pthread_mutex_t		dead_mutex;
-	t_philo				*ph_lst;
+	pthread_mutex_t		fork_check;
+	t_list				*ph_lst;
 	pthread_t			thread;
 	int					ph_dead;
 	int					phs_ate;
@@ -62,7 +63,6 @@ struct s_philo
 	unsigned long long	last_meal;
 	long long			n_meals;
 	int					dead_flag;
-	t_philo				*next;
 };
 
 
@@ -81,7 +81,7 @@ int					init_thread(void);
 int					init_program(char **av);
 
 //debug functions
-void				ft_printlst(t_philo *philos);
+void				ft_printlst(t_list *lst);
 
 //philo.c
 void				*routine(void *route);
@@ -89,11 +89,11 @@ void				*routine(void *route);
 //lst_utils.c
 t_philo				*last_philo(t_philo *lst);
 void				add_back_philo(t_philo **lst, t_philo *new);
-t_philo				*new_philo(int id);
+t_list				*new_philo(int id);
 
 //utils.c
-unsigned long long	get_time_of_day(void);
-unsigned long long	get_program_time(void);
+long				get_time_of_day(void);
+long				get_program_time(void);
 void				f_usleep(long long n);
 
 //thread.c
@@ -101,7 +101,7 @@ int					destroy_mutex(void);
 int					join_thread(void);
 
 //actions.c
-void				f_eat(t_philo *philo);
+void				f_eat(t_list *lst);
 void				f_think(t_philo *philo);
 void				f_sleep(t_philo *philo);
 void				f_write(t_philo *philo, int action, unsigned long long time);

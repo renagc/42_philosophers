@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 11:45:55 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/05/26 12:08:32 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/05 00:24:40 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,18 @@ static int	check_args(char **av)
 	return (1);
 }
 
+//free philos list
 void	free_lst(void)
 {
-	t_philo	*first;
-	t_philo	*next;
-	t_philo	*last;
+	t_list	*first;
+	t_list	*next;
+	t_list	*last;
+	int		i;
 
 	first = table()->ph_lst;
 	last = table()->ph_lst;
-	while (last->ph_id != table()->n_of_ph)
+	i = 0;
+	while (++i <= table()->n_of_ph)
 		last = last->next;
 	last->next = NULL;
 	next = first;
@@ -52,13 +55,16 @@ void	free_lst(void)
 int	main(int ac, char **av)
 {
 	if (ac < 5 || ac > 6 || !check_args(av))
-		return (ft_printf("Error: check args\n"));
-	if (!init_program(av))
-	{
-		ft_printf("Error\nMust have at least 1 Philo\n");
-		return (0);
-	}
-	join_thread();
+		return (ft_printf("Error\nCheck args\n"));
+	if (!init_table(av))
+		return (ft_printf("Error\nMust have at least 1 Philo\n"));
+	init_philos();
+	if (!init_mutex())
+		return (ft_printf("Error\nCannot init mutexes"));
+	if (!init_thread())
+		return (ft_printf("Error\nCannot create threads"));
+	if (!join_thread())
+		return (ft_printf("Error\nCannot join threads"));
 	destroy_mutex();
 	free_lst();
 	return (0);
