@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:25:57 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/07 08:53:28 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/07 14:11:06 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	write_action(int id, char *str)
 	pthread_mutex_lock(&table()->write_mutex);
 	if (philos_are_alive())
 		ft_printf("%d %d %s\n", get_program_time(), id, str);
-	if (ft_strncmp(str, "died", 4))
+	if (ft_strncmp(str, "died", 4) != 0)
 		pthread_mutex_unlock(&table()->write_mutex);
 }
 

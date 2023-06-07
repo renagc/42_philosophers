@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 09:54:58 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/06 23:08:55 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/07 14:11:35 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	init_table(char **av)
 	table()->start_time = get_time_of_day();
 	table()->all_ate = 0;
 	table()->ph_dead = 0;
-	table()->phs_ate = 0;
 	return (1);
 }
 
@@ -99,6 +98,7 @@ int	init_thread(void)
 		temp = temp->next;
 	}
 	control_table();
-	pthread_mutex_unlock(&table()->write_mutex);
+	if (table()->ph_dead == 1)
+		pthread_mutex_unlock(&table()->write_mutex);
 	return (1);
 }

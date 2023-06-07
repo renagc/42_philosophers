@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/07 00:32:44 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/07 13:45:33 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,7 @@ struct s_table
 	pthread_mutex_t		time_mutex;
 	pthread_mutex_t		fork_mutex;
 	t_list				*ph_lst;
-	pthread_t			thread;
 	int					ph_dead;
-	int					phs_ate;
 };
 
 struct s_philo
@@ -69,6 +67,7 @@ struct s_philo
 t_table				*table(void);
 
 int					all_ate(void);
+int					philos_are_full(void);
 
 //init.c
 int					init_table(char **av);
