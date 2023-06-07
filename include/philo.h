@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/05 12:58:33 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/07 00:32:44 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,15 @@ struct s_table
 	unsigned int		t_to_sleep;
 	int					n_must_eat;
 	long long			all_ate;
-	unsigned long long	start_time;
+	long				start_time;
+	//feita
 	pthread_mutex_t		write_mutex;
-	pthread_mutex_t		time_mutex;
 	pthread_mutex_t		meal_mutex;
+	pthread_mutex_t		full_mutex;
 	pthread_mutex_t		dead_mutex;
-	pthread_mutex_t		fork_check;
+	//feita
+	pthread_mutex_t		time_mutex;
+	pthread_mutex_t		fork_mutex;
 	t_list				*ph_lst;
 	pthread_t			thread;
 	int					ph_dead;
@@ -55,8 +58,8 @@ struct s_philo
 	pthread_mutex_t		fork;
 	int					fork_in_use;
 	unsigned long long	last_meal;
-	long long			n_meals;
 	int					dead_flag;
+	int					times_ate;
 };
 
 
@@ -73,6 +76,8 @@ void				init_philos(void);
 int					init_mutex(void);
 int					init_thread(void);
 int					init_program(char **av);
+int					philo_is_full(t_philo *philo);
+int					check_ate(void);
 
 //debug functions
 void				ft_printlst(t_list *lst);
@@ -93,18 +98,19 @@ void				f_usleep(long long n);
 //thread.c
 int					destroy_mutex(void);
 int					join_thread(void);
+int					f_check_meal(t_list *lst);
+int					f_check_dead(void);
+void				control_table(void);
 
 //actions.c
-void				f_eat(t_list *lst);
+void				philo_eats(t_list *lst);
 void				f_think(t_philo *philo);
 void				f_sleep(t_philo *philo);
-void				f_write(t_philo *philo, char *str, unsigned long long time);
+void				write_action(int id, char *str);
 
 
-int					someone_died(void);
+int					philos_are_alive(void);
 
-//conditions.c
-int					check_dead(t_philo *philo);
 
 void				*routine_control(void *route);
 

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:16:13 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/04 23:41:49 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/07 01:37:53 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	f_usleep(long long n)
 {
 	long	time;
 
-	time = get_time_of_day() + n;
-	while (get_time_of_day() < time)
-		usleep(10);
+	time = get_time_of_day();
+	while (get_time_of_day() - time < n)
+		usleep(table()->n_of_ph);
 }

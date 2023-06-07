@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 09:54:58 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/05 00:25:09 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/06 23:08:55 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int	init_table(char **av)
 	if (av[5])
 		table()->n_must_eat = ft_atoi(av[5]);
 	table()->start_time = get_time_of_day();
-	table()->ph_dead = 0;
 	table()->all_ate = 0;
+	table()->ph_dead = 0;
 	table()->phs_ate = 0;
 	return (1);
 }
@@ -40,10 +40,9 @@ t_list	*new_philo(int id)
 		return (0);
 	newphilo->ph_id = id;
 	newphilo->last_meal = 0;
-	if (table()->n_must_eat != -1)
-		newphilo->n_meals = table()->n_must_eat;
 	newphilo->dead_flag = 0;
 	newphilo->fork_in_use = 0;
+	newphilo->times_ate = 0;
 	return (ft_lstnew((t_philo *)newphilo));
 }
 
@@ -75,11 +74,12 @@ int	init_mutex(void)
 			return (0);
 		temp = temp->next;
 	}
+	pthread_mutex_init(&table()->fork_mutex, NULL);
 	pthread_mutex_init(&table()->meal_mutex, NULL);
 	pthread_mutex_init(&table()->dead_mutex, NULL);
 	pthread_mutex_init(&table()->write_mutex, NULL);
 	pthread_mutex_init(&table()->time_mutex, NULL);
-	pthread_mutex_init(&table()->fork_check, NULL);
+	pthread_mutex_init(&table()->full_mutex, NULL);
 	return (1);
 }
 
@@ -98,8 +98,7 @@ int	init_thread(void)
 			return (0);
 		temp = temp->next;
 	}
-	if (pthread_create(&table()->thread, NULL,
-			routine_control, table()->ph_lst))
-		return (0);
+	control_table();
+	pthread_mutex_unlock(&table()->write_mutex);
 	return (1);
 }
