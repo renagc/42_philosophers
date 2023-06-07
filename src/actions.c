@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:25:57 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/07 14:11:06 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/07 17:47:07 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ void	write_action(int id, char *str)
 {
 	pthread_mutex_lock(&table()->write_mutex);
 	if (philos_are_alive())
-		ft_printf("%d %d %s\n", get_program_time(), id, str);
-	if (ft_strncmp(str, "died", 4) != 0)
-		pthread_mutex_unlock(&table()->write_mutex);
+		printf("%ld %d %s\n", get_program_time(), id, str);
+	pthread_mutex_unlock(&table()->write_mutex);
 }
 
 /*
@@ -30,21 +29,12 @@ void	write_action(int id, char *str)
 */
 void	lock_forks(t_list *lst)
 {
-	t_philo	*left;
-	t_philo	*right;
 	t_philo	*philo;
 
 	philo = (t_philo *)lst->content;
-	left = philo;
-	right = (t_philo *)lst->next->content;
-	if (left->ph_id > right->ph_id || left->ph_id % 2 != 0)
-	{
-		left = (t_philo *)lst->next->content;
-		right = (t_philo *)lst->content;
-	}
-	pthread_mutex_lock(&left->fork);
+	pthread_mutex_lock(philo->fork1);
 	write_action(philo->ph_id, "has taken a fork");
-	pthread_mutex_lock(&right->fork);
+	pthread_mutex_lock(philo->fork2);
 	write_action(philo->ph_id, "has taken a fork");
 }
 
@@ -53,18 +43,11 @@ void	lock_forks(t_list *lst)
 */
 void	unlock_forks(t_list *lst)
 {
-	t_philo	*left;
-	t_philo	*right;
+	t_philo	*philo;
 
-	left = (t_philo *)lst->content;
-	right = (t_philo *)lst->next->content;
-	if (left->ph_id > right->ph_id)
-	{
-		left = (t_philo *)lst->next->content;
-		right = (t_philo *)lst->content;
-	}
-	pthread_mutex_unlock(&left->fork);
-	pthread_mutex_unlock(&right->fork);
+	philo = (t_philo *)lst->content;
+	pthread_mutex_unlock(philo->fork1);
+	pthread_mutex_unlock(philo->fork2);
 }
 
 /*
@@ -82,10 +65,10 @@ void	philo_eats(t_list *lst)
 	pthread_mutex_lock(&table()->meal_mutex);
 	write_action(philo->ph_id, "is eating");
 	philo->last_meal = get_program_time();
-	philo->times_ate += 1;
 	pthread_mutex_unlock(&table()->meal_mutex);
 	f_usleep(table()->t_to_eat);
 	unlock_forks(lst);
+	philo->times_ate += 1;
 }
 
 int	philos_are_full(void)
@@ -102,25 +85,36 @@ int	philos_are_full(void)
 	return (0);
 }
 
-void	control_table(void)
+int	philo_is_alive(t_list *lst)
+{
+	pthread_mutex_lock(&table()->meal_mutex);
+	if (get_program_time() - ((t_philo *)lst->content)->last_meal
+		>= table()->t_to_die)
+	{
+		pthread_mutex_lock(&table()->dead_mutex);
+		table()->ph_dead = 1;
+		pthread_mutex_unlock(&table()->dead_mutex);
+		pthread_mutex_unlock(&table()->meal_mutex);
+		return (0);
+	}
+	pthread_mutex_unlock(&table()->meal_mutex);
+	return (1);
+}
+
+void	*control_table(void *route)
 {
 	t_list	*lst;
 
+	(void)route;
 	lst = table()->ph_lst;
 	while (!philos_are_full())
 	{
-		pthread_mutex_lock(&table()->meal_mutex);
-		if (get_program_time() - ((t_philo *)lst->content)->last_meal
-			> table()->t_to_die)
+		if (!philo_is_alive(lst))
 		{
-			write_action(((t_philo *)lst->content)->ph_id, "died");
-			pthread_mutex_lock(&table()->dead_mutex);
-			table()->ph_dead = 1;
-			pthread_mutex_unlock(&table()->dead_mutex);
-			pthread_mutex_unlock(&table()->meal_mutex);
+			ft_printf("died");
 			break ;
 		}
-		pthread_mutex_unlock(&table()->meal_mutex);
 		lst = lst->next;
 	}
+	return (NULL);
 }

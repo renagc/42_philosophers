@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:20:03 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/07 13:09:47 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/07 17:28:13 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,13 @@ int	destroy_mutex(void)
 	int		i;
 
 	temp = table()->ph_lst;
-	i = 0;
+	i = -1;
 	while (++i <= table()->n_of_ph)
 	{
-		if (pthread_mutex_destroy(&((t_philo *)temp->content)->fork))
-			return (ft_printf("Error initing mutex"));
+		if (pthread_mutex_destroy(&table()->forks[i]))
+			return (0);
 		temp = temp->next;
 	}
-	pthread_mutex_destroy(&table()->fork_mutex);
 	pthread_mutex_destroy(&table()->meal_mutex);
 	pthread_mutex_destroy(&table()->dead_mutex);
 	pthread_mutex_destroy(&table()->write_mutex);
@@ -47,6 +46,8 @@ int	join_thread(void)
 			return (0);
 		temp = temp->next;
 	}
+	if (pthread_join(table()->thread, NULL))
+		return (0);
 	return (1);
 }
 
@@ -94,7 +95,7 @@ void	*routine(void *route)
 	}
 	if (((t_philo *)temp->content)->ph_id % 2 == 0)
 		usleep(200);
-	while (philos_are_alive() && !philo_is_full((t_philo *)temp->content))
+	while (!philo_is_full((t_philo *)temp->content) && philos_are_alive())
 	{
 		philo_eats(temp);
 		write_action(((t_philo *)temp->content)->ph_id, "is sleeping");

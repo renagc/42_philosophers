@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/07 13:45:33 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/07 16:16:34 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ struct s_table
 	pthread_mutex_t		dead_mutex;
 	//feita
 	pthread_mutex_t		time_mutex;
-	pthread_mutex_t		fork_mutex;
+	pthread_mutex_t		*forks;
 	t_list				*ph_lst;
+	pthread_t			thread;
 	int					ph_dead;
 };
 
@@ -54,6 +55,8 @@ struct s_philo
 	int					ph_id;
 	pthread_t			thread;
 	pthread_mutex_t		fork;
+	pthread_mutex_t		*fork1;
+	pthread_mutex_t		*fork2;
 	int					fork_in_use;
 	unsigned long long	last_meal;
 	int					dead_flag;
@@ -99,7 +102,7 @@ int					destroy_mutex(void);
 int					join_thread(void);
 int					f_check_meal(t_list *lst);
 int					f_check_dead(void);
-void				control_table(void);
+void				*control_table(void *route);
 
 //actions.c
 void				philo_eats(t_list *lst);
