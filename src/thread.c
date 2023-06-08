@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   thread.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:20:03 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/07 17:28:13 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/08 17:33:06 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,26 +58,27 @@ int	philo_is_full(t_philo *philo)
 {
 	if (!table()->n_must_eat)
 		return (0);
+	pthread_mutex_lock(&table()->full_mutex);
 	if (philo->times_ate == table()->n_must_eat)
 	{
-		pthread_mutex_lock(&table()->full_mutex);
 		table()->all_ate += 1;
 		pthread_mutex_unlock(&table()->full_mutex);
 		return (1);
 	}
+	pthread_mutex_unlock(&table()->full_mutex);
 	return (0);
 }
 
-int	philos_are_alive(void)
+int	someone_died(void)
 {
 	pthread_mutex_lock(&table()->dead_mutex);
-	if (table()->ph_dead == 1)
+	if (table()->ph_dead)
 	{
 		pthread_mutex_unlock(&table()->dead_mutex);
-		return (0);
+		return (1);
 	}
 	pthread_mutex_unlock(&table()->dead_mutex);
-	return (1);
+	return (0);
 }
 
 /*
@@ -95,9 +96,11 @@ void	*routine(void *route)
 	}
 	if (((t_philo *)temp->content)->ph_id % 2 == 0)
 		usleep(200);
-	while (!philo_is_full((t_philo *)temp->content) && philos_are_alive())
+	while (!someone_died())
 	{
 		philo_eats(temp);
+		if (philo_is_full((t_philo *)temp->content))
+			break ;
 		write_action(((t_philo *)temp->content)->ph_id, "is sleeping");
 		f_usleep(table()->t_to_sleep);
 		write_action(((t_philo *)temp->content)->ph_id, "is thinking");

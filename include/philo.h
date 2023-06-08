@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/07 16:16:34 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/08 17:19:33 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ struct s_table
 	unsigned int		t_to_sleep;
 	int					n_must_eat;
 	long long			all_ate;
+	int					phs_full;
 	long				start_time;
 	//feita
 	pthread_mutex_t		write_mutex;
@@ -96,6 +97,7 @@ t_list				*new_philo(int id);
 long				get_time_of_day(void);
 long				get_program_time(void);
 void				f_usleep(long long n);
+int					someone_died(void);
 
 //thread.c
 int					destroy_mutex(void);
@@ -111,7 +113,7 @@ void				f_sleep(t_philo *philo);
 void				write_action(int id, char *str);
 
 
-int					philos_are_alive(void);
+int					philos_are_alive(t_list *lst);
 
 
 void				*routine_control(void *route);

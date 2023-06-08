@@ -10,7 +10,7 @@ NAME = philo
 
 #Compiler flags
 CC = @gcc
-CFLAGS = -Wall -Wextra -Werror -pthread -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -pthread #-fsanitize=thread -g
 
 RM = @rm -rf
 
@@ -55,6 +55,6 @@ re: fclean all
 
 run: re
 	@echo "\nRunning program:\n"
-	@./$(NAME) 5 600 200 200 7
+	@./$(NAME) 2 400 205 200 10
 
 .PHONY: all clean fclean re bonus
