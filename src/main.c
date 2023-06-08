@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 11:45:55 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/06 11:03:37 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/08 22:16:41 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,29 +29,6 @@ static int	check_args(char **av)
 	return (1);
 }
 
-//free philos list
-void	free_lst(void)
-{
-	t_list	*first;
-	t_list	*next;
-	t_list	*last;
-	int		i;
-
-	first = table()->ph_lst;
-	last = table()->ph_lst;
-	i = 0;
-	while (++i <= table()->n_of_ph)
-		last = last->next;
-	last->next = NULL;
-	next = first;
-	while (next)
-	{
-		next = first->next;
-		free(first);
-		first = next;
-	}
-}
-
 int	main(int ac, char **av)
 {
 	if (ac < 5 || ac > 6 || !check_args(av))
@@ -65,7 +42,8 @@ int	main(int ac, char **av)
 		return (ft_printf("Error\nCannot create threads"));
 	if (!join_thread())
 		return (ft_printf("Error\nCannot join threads"));
-	destroy_mutex();
+	if (!destroy_mutex())
+		return (ft_printf("Error\nCannot destroy mutexes"));
 	free_lst();
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/08 17:19:33 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/08 22:28:48 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,11 @@ struct s_table
 	unsigned int		t_to_sleep;
 	int					n_must_eat;
 	long long			all_ate;
-	int					phs_full;
 	long				start_time;
-	//feita
 	pthread_mutex_t		write_mutex;
 	pthread_mutex_t		meal_mutex;
 	pthread_mutex_t		full_mutex;
 	pthread_mutex_t		dead_mutex;
-	//feita
-	pthread_mutex_t		time_mutex;
-	pthread_mutex_t		*forks;
 	t_list				*ph_lst;
 	pthread_t			thread;
 	int					ph_dead;
@@ -56,66 +51,42 @@ struct s_philo
 	int					ph_id;
 	pthread_t			thread;
 	pthread_mutex_t		fork;
-	pthread_mutex_t		*fork1;
-	pthread_mutex_t		*fork2;
-	int					fork_in_use;
-	unsigned long long	last_meal;
-	int					dead_flag;
+	pthread_mutex_t		*first;
+	pthread_mutex_t		*second;
+	long				last_meal;
 	int					times_ate;
 };
 
-
 // -----------------------------  FUNCTIONS --------------------------------- //
-
-//objects
-t_table				*table(void);
-
-int					all_ate(void);
-int					philos_are_full(void);
 
 //init.c
 int					init_table(char **av);
 void				init_philos(void);
+
+//mutex.c
 int					init_mutex(void);
+void				philo_select_forks(void);
+int					destroy_mutex(void);
+
+//thread.c
 int					init_thread(void);
-int					init_program(char **av);
+int					join_thread(void);
+
+//actions.c
+void				write_action(int id, char *str);
+void				philo_eats(t_list *lst);
+
+//conditions.c
+int					philo_is_alive(t_philo *philo);
 int					philo_is_full(t_philo *philo);
-int					check_ate(void);
-
-//debug functions
-void				ft_printlst(t_list *lst);
-
-//philo.c
-void				*routine(void *route);
-
-//lst_utils.c
-t_philo				*last_philo(t_philo *lst);
-void				add_back_philo(t_philo **lst, t_philo *new);
-t_list				*new_philo(int id);
+int					someone_died(void);
+int					philos_are_full(void);
 
 //utils.c
 long				get_time_of_day(void);
 long				get_program_time(void);
 void				f_usleep(long long n);
-int					someone_died(void);
-
-//thread.c
-int					destroy_mutex(void);
-int					join_thread(void);
-int					f_check_meal(t_list *lst);
-int					f_check_dead(void);
-void				*control_table(void *route);
-
-//actions.c
-void				philo_eats(t_list *lst);
-void				f_think(t_philo *philo);
-void				f_sleep(t_philo *philo);
-void				write_action(int id, char *str);
-
-
-int					philos_are_alive(t_list *lst);
-
-
-void				*routine_control(void *route);
+t_table				*table(void);
+void				free_lst(void);
 
 #endif

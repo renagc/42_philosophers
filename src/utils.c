@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:16:13 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/07 14:16:22 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/08 22:12:29 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,34 @@ void	f_usleep(long long n)
 	time = get_time_of_day();
 	while (get_time_of_day() - time < n)
 		usleep(table()->n_of_ph);
+}
+
+t_table	*table(void)
+{
+	static t_table	table;
+
+	return (&table);
+}
+
+//free philos list
+void	free_lst(void)
+{
+	t_list	*first;
+	t_list	*next;
+	t_list	*last;
+	int		i;
+
+	first = table()->ph_lst;
+	last = table()->ph_lst;
+	i = 0;
+	while (++i <= table()->n_of_ph)
+		last = last->next;
+	last->next = NULL;
+	next = first;
+	while (next)
+	{
+		next = first->next;
+		free(first);
+		first = next;
+	}
 }

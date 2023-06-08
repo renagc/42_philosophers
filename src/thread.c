@@ -6,83 +6,40 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:20:03 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/08 17:33:06 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/08 22:23:59 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-int	destroy_mutex(void)
+void	*routine(void *route);
+void	*control_table(void *route);
+
+/*
+	Init thread for each philo and one thread to control;
+*/
+int	init_thread(void)
 {
 	t_list	*temp;
 	int		i;
 
 	temp = table()->ph_lst;
 	i = -1;
-	while (++i <= table()->n_of_ph)
+	table()->start_time = get_time_of_day();
+	while (++i < table()->n_of_ph)
 	{
-		if (pthread_mutex_destroy(&table()->forks[i]))
+		if (pthread_create(&((t_philo *)temp->content)->thread,
+				NULL, routine, temp))
 			return (0);
 		temp = temp->next;
 	}
-	pthread_mutex_destroy(&table()->meal_mutex);
-	pthread_mutex_destroy(&table()->dead_mutex);
-	pthread_mutex_destroy(&table()->write_mutex);
-	pthread_mutex_destroy(&table()->time_mutex);
-	pthread_mutex_destroy(&table()->full_mutex);
-	return (1);
-}
-
-int	join_thread(void)
-{
-	t_list	*temp;
-	int		i;
-
-	temp = table()->ph_lst;
-	i = 0;
-	while (++i <= table()->n_of_ph)
-	{
-		if (pthread_join(((t_philo *)temp->content)->thread, NULL))
-			return (0);
-		temp = temp->next;
-	}
-	if (pthread_join(table()->thread, NULL))
+	if (pthread_create(&table()->thread, NULL, control_table, NULL))
 		return (0);
 	return (1);
 }
 
 /*
-	This function checks if the philo is full;
-*/
-int	philo_is_full(t_philo *philo)
-{
-	if (!table()->n_must_eat)
-		return (0);
-	pthread_mutex_lock(&table()->full_mutex);
-	if (philo->times_ate == table()->n_must_eat)
-	{
-		table()->all_ate += 1;
-		pthread_mutex_unlock(&table()->full_mutex);
-		return (1);
-	}
-	pthread_mutex_unlock(&table()->full_mutex);
-	return (0);
-}
-
-int	someone_died(void)
-{
-	pthread_mutex_lock(&table()->dead_mutex);
-	if (table()->ph_dead)
-	{
-		pthread_mutex_unlock(&table()->dead_mutex);
-		return (1);
-	}
-	pthread_mutex_unlock(&table()->dead_mutex);
-	return (0);
-}
-
-/*
-	Routine for each thread;
+	Routine for each philo thread;
 */
 void	*routine(void *route)
 {
@@ -106,4 +63,40 @@ void	*routine(void *route)
 		write_action(((t_philo *)temp->content)->ph_id, "is thinking");
 	}
 	return (NULL);
+}
+
+/*
+	Control table for verifying ;
+*/
+void	*control_table(void *route)
+{
+	t_list	*lst;
+
+	(void)route;
+	lst = table()->ph_lst;
+	while (!philos_are_full())
+	{
+		if (!philo_is_alive((t_philo *)lst->content))
+			break ;
+		lst = lst->next;
+	}
+	return (NULL);
+}
+
+int	join_thread(void)
+{
+	t_list	*temp;
+	int		i;
+
+	temp = table()->ph_lst;
+	i = -1;
+	while (++i < table()->n_of_ph)
+	{
+		if (pthread_join(((t_philo *)temp->content)->thread, NULL))
+			return (0);
+		temp = temp->next;
+	}
+	if (pthread_join(table()->thread, NULL))
+		return (0);
+	return (1);
 }

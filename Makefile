@@ -10,7 +10,7 @@ NAME = philo
 
 #Compiler flags
 CC = @gcc
-CFLAGS = -Wall -Wextra -Werror -pthread #-fsanitize=thread -g
+CFLAGS = -Wall -Wextra -Werror -pthread -fsanitize=thread -g
 
 RM = @rm -rf
 
@@ -19,7 +19,7 @@ LIBFT_DIR	=	lib/libft/
 LIBFT_A		=	lib/libft/libft.a
 
 #Source files
-SRC			=	src/actions.c  src/conditions.c  src/init.c  src/main.c  src/object.c  src/thread.c  src/utils.c
+SRC			=	src/actions.c  src/conditions.c  src/init.c  src/main.c  src/thread.c  src/utils.c  src/mutex.c
 
 #Object files
 OBJ			=	$(SRC:src/%.c=$(OBJ_DIR)/%.o)
@@ -55,6 +55,6 @@ re: fclean all
 
 run: re
 	@echo "\nRunning program:\n"
-	@./$(NAME) 4 800 200 200
+	@./$(NAME) 4 800 200 200 5
 
 .PHONY: all clean fclean re bonus
