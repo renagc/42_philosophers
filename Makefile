@@ -55,6 +55,6 @@ re: fclean all
 
 run: re
 	@echo "\nRunning program:\n"
-	@./$(NAME) 2 400 205 200 10
+	@./$(NAME) 4 800 200 200
 
 .PHONY: all clean fclean re bonus
