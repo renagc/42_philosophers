@@ -17,10 +17,12 @@ int	philo_is_alive(t_philo *philo)
 	pthread_mutex_lock(&table()->meal_mutex);
 	if (get_program_time() - philo->last_meal >= table()->t_to_die)
 	{
-		write_action(philo->ph_id, "died");
+		pthread_mutex_lock(&table()->write_mutex);
+		ft_printf("%d %d died\n", get_program_time(), philo->ph_id);
 		pthread_mutex_lock(&table()->dead_mutex);
 		table()->ph_dead = 1;
 		pthread_mutex_unlock(&table()->dead_mutex);
+		pthread_mutex_unlock(&table()->write_mutex);
 		pthread_mutex_unlock(&table()->meal_mutex);
 		return (0);
 	}

@@ -59,7 +59,11 @@ void	*routine(void *route)
 		if (philo_is_full((t_philo *)temp->content))
 			break ;
 		write_action(((t_philo *)temp->content)->ph_id, "is sleeping");
+		if (someone_died())
+			break ;
 		f_usleep(table()->t_to_sleep);
+		if (someone_died())
+			break ;
 		write_action(((t_philo *)temp->content)->ph_id, "is thinking");
 	}
 	return (NULL);

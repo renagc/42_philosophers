@@ -28,18 +28,30 @@ int	init_table(char **av)
 	return (1);
 }
 
+t_list	*ft_new(void *content)
+{
+	t_list	*newlist;
+
+	newlist = malloc(sizeof(t_list));
+	if (!newlist)
+		return (0);
+	newlist->content = (t_philo *)content;
+	newlist->next = NULL;
+	return (newlist);
+}
+
 //creates new_philo
 t_list	*new_philo(int id)
 {
 	t_philo	*newphilo;
 
-	newphilo = malloc(sizeof(t_philo));
+	newphilo = (t_philo *)malloc(sizeof(t_philo));
 	if (!newphilo)
 		return (0);
 	newphilo->ph_id = id;
 	newphilo->last_meal = 0;
 	newphilo->times_ate = 0;
-	return (ft_lstnew((t_philo *)newphilo));
+	return (ft_new(newphilo));
 }
 
 //creates linked list with all philos -- done

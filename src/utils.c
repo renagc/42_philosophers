@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:16:13 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/08 22:12:29 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/10 20:25:13 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,22 +44,23 @@ t_table	*table(void)
 //free philos list
 void	free_lst(void)
 {
-	t_list	*first;
-	t_list	*next;
 	t_list	*last;
+	t_list	*current;
+	t_list	*next;
 	int		i;
 
-	first = table()->ph_lst;
 	last = table()->ph_lst;
-	i = 0;
-	while (++i <= table()->n_of_ph)
+	i = -1;
+	while (++i < table()->n_of_ph - 1)
 		last = last->next;
 	last->next = NULL;
-	next = first;
-	while (next)
+	current = table()->ph_lst;
+	while (current)
 	{
-		next = first->next;
-		free(first);
-		first = next;
+		next = current->next;
+		free(current->content);
+		free(current);
+		current = next;
 	}
+	table()->ph_lst = NULL;
 }
