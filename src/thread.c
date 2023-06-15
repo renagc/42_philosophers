@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 15:20:03 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/08 22:23:59 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/14 08:43:02 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	*routine(void *route)
 		usleep(200);
 	while (!someone_died())
 	{
+		usleep(100);
 		philo_eats(temp);
 		if (philo_is_full((t_philo *)temp->content))
 			break ;

@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 11:45:55 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/09 17:10:29 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/14 16:38:05 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,48 @@ static int	check_args(char **av)
 	return (1);
 }
 
+int	ft_atoi_max(const char *str)
+{
+	int		i;
+	long	res;
+
+	res = 0;
+	i = 0;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		res = res * 10 + str[i] - 48;
+		if (res > INT_MAX)
+			return (-1);
+		i++;
+	}
+	return (res);
+}
+
 int	main(int ac, char **av)
 {
-	if (ac < 5 || ac > 6 || !check_args(av))
+	if (ac < 5 || ac > 6 || !check_args(av) || !init_table(av))
 		return (ft_printf("Error\nCheck args\n"));
-	if (!init_table(av))
-		return (ft_printf("Error\nMust have at least 1 Philo\n"));
 	init_philos();
 	if (!init_mutex())
+	{
+		free_lst();
 		return (ft_printf("Error\nCannot init mutexes"));
+	}
 	if (!init_thread())
+	{
+		free_lst();
 		return (ft_printf("Error\nCannot create threads"));
+	}
 	if (!join_thread())
+	{
+		free_lst();
 		return (ft_printf("Error\nCannot join threads"));
+	}
 	if (!destroy_mutex())
+	{
+		free_lst();
 		return (ft_printf("Error\nCannot destroy mutexes"));
+	}
 	free_lst();
 	return (0);
 }

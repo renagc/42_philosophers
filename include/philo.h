@@ -6,7 +6,7 @@
 /*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 18:40:28 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/08 22:28:48 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/14 16:40:56 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <sys/time.h>
 # include <pthread.h>
+# include <limits.h>
 # include "../lib/libft/include/libft.h"
 
 // -------------------------------- MACROS ---------------------------------- //
@@ -31,9 +32,9 @@ typedef struct s_philo	t_philo;
 struct s_table
 {
 	int					n_of_ph;
-	unsigned int		t_to_die;
-	unsigned int		t_to_eat;
-	unsigned int		t_to_sleep;
+	int					t_to_die;
+	int					t_to_eat;
+	int					t_to_sleep;
 	int					n_must_eat;
 	long long			all_ate;
 	long				start_time;
@@ -88,5 +89,8 @@ long				get_program_time(void);
 void				f_usleep(long long n);
 t_table				*table(void);
 void				free_lst(void);
+
+//main.c
+int					ft_atoi_max(const char *str);
 
 #endif
