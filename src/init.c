@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgomes-c <rgomes-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: rgomes-c <rgomes-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 09:54:58 by rgomes-c          #+#    #+#             */
-/*   Updated: 2023/06/15 09:27:46 by rgomes-c         ###   ########.fr       */
+/*   Updated: 2023/06/15 10:43:54 by rgomes-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	init_table(char **av)
 		if (table()->n_must_eat <= 0)
 			return (0);
 	}
-	if (table()->n_of_ph <= 0 || table()->t_to_die <= 0
-		|| table()->t_to_eat <= 0 || table()->t_to_sleep <= 0)
+	if (table()->n_of_ph <= 0 || table()->t_to_die < 0
+		|| table()->t_to_eat < 0 || table()->t_to_sleep < 0)
 		return (0);
 	table()->all_ate = 0;
 	table()->ph_dead = 0;
